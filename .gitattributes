@@ -1,0 +1,10 @@
+# Force LF line endings everywhere so the built READMEs and client bundle stay
+# clean across Windows/macOS/Linux checkouts (and don't churn the registry PRs).
+* text=auto eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.ts text eol=lf
