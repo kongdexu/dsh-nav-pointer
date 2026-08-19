@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.1.3] - 2026-08-19
+
+### Fixed
+
+- Switching to a different session no longer moves the pointer rail to the
+  screen's top-left corner. The cached `[data-conversation-scroll]` node is now
+  re-validated (`isConnected`) and re-queried on session switch, the mutation
+  observer is re-attached to the new scrollport, and detached/zero-size
+  scrollports clear the rail instead of painting with stale all-zero geometry.
+
 ## [0.1.2] - 2026-08-19
 
 ### Added
