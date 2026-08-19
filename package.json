@@ -1,6 +1,6 @@
 {
   "name": "dsh-nav-pointer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DSH Web client plugin: vertical message pointer rail on the left edge of the chat area, with clickable markers per user message for quick navigation and hover preview bubbles.",
   "type": "module",
   "main": "lib/index.js",
@@ -21,9 +21,15 @@
       "patch": "./cordis.patch.yml"
     },
     "client": {
-      "inject": ["slots"],
-      "platform": "web"
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
     }
+  },
+  "engines": {
+    "node": ">=20"
   },
   "files": [
     "lib",
@@ -41,7 +47,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kongdexu/dsh-nav-pointer"
+    "url": "git+https://github.com/kongdexu/dsh-nav-pointer.git"
   },
   "publishConfig": {
     "access": "public"
