@@ -17,35 +17,33 @@
 
 ### 通过 dshmarket（推荐）
 
-在 DSH 市场中搜索 `dsh-nav-pointer` 并安装。
+在市场里搜索 `dsh-nav-pointer` 一键安装。与其他插件一致，多数情况刷新页面即生效。
 
-### 手动安装（本地 profile）
+### 命令行安装（官方插件管理）
 
 ```bash
-cd ~/.dsh/profiles/web
-npm install dsh-nav-pointer
-# 或从 GitHub 直接安装：
-# npm install github:kongdexu/dsh-nav-pointer
+dsh plugin --profile web add dsh-nav-pointer
 ```
 
-安装后编辑 `~/.dsh/profiles/web/package.json` 的 `dsh.profile.bundles` 数组，加入：
+该命令会安装到 `~/.dsh/profiles/web`，并因为本包声明了
+`dsh.bundle.patch`，自动把 `dsh-nav-pointer` 追加进
+`dsh.profile.bundles`。重启 `dsh web` 生效。
 
-```json
-"dsh-nav-pointer"
-```
-
-重启 DSH Web 即可生效。
+> 若 pnpm ≥11 报 `minimumReleaseAge`（安全等待期），是**新发布的包**触发的策略，可一次性放行：
+>
+> ```bash
+> dsh plugin --profile web add dsh-nav-pointer --config.minimumReleaseAge=0
+> ```
 
 ### 开发模式（本地 link）
 
 ```bash
 git clone https://github.com/kongdexu/dsh-nav-pointer
-cd dsh-nav-pointer
 cd ~/.dsh/profiles/web
-npm link /path/to/dsh-nav-pointer
+dsh plugin --profile web add link:/path/to/dsh-nav-pointer
 ```
 
-在 `dsh.profile.bundles` 加入 `"dsh-nav-pointer"`，重启 DSH。
+用 `--config.minimumReleaseAge=0` 同理。
 
 ## 文件结构 Layout
 
@@ -67,6 +65,26 @@ package.json          # 包元信息，含 dsh.bundle / dsh.client 字段
 - 用户消息行：`[data-chat-flow-kind="user"]`
 - 定位：`requestAnimationFrame` 循环每帧读取 `getBoundingClientRect()`，签名变化时重算位置
 - 事件：`MutationObserver` 监听消息列表变化，scroll 事件（capture 阶段）更新气泡位置
+
+## 验证 Verify
+
+无浏览器即可跑加载契约冒烟测试：
+
+```bash
+npm test
+```
+
+它会用 mock 的 `window.__ModuleLoader__` + React + `document` 加载
+`lib/client.js`，断言插件导出 `{ name, inject: ["slots"], apply }`、
+`apply()` 正确注册 `shell.overlay` 槽位，且注入的 CSS 符合当前规格。
+
+## 故障排查 Troubleshooting
+
+- **安装时 `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`**：本包（或 profile 里其他新发布包）在 pnpm 24h 安全等待期内，用上文一次性放行参数重试一次即可。
+- **重启后看不到导轨**：确认 `dsh.profile.bundles` 里含 `dsh-nav-pointer`，且当前会话存在用户消息（无用户消息时不渲染）；清空聊天后重新发送一条再看。
+- **气泡竖排/每字一行**：不会发生——气泡是 `position: fixed` 且 `width:240px`，不受导轨 36px 窄列影响。
+
+更多实现细节见 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)，变更记录见 [`CHANGELOG.md`](CHANGELOG.md)。
 
 ## License
 
