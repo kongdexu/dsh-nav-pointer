@@ -31,6 +31,9 @@
   "engines": {
     "node": ">=20"
   },
+  "scripts": {
+    "test": "node test/smoke.mjs"
+  },
   "files": [
     "lib",
     "cordis.patch.yml"
