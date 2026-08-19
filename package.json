@@ -1,0 +1,49 @@
+{
+  "name": "dsh-message-pointer",
+  "version": "0.1.0",
+  "description": "DSH Web client plugin: vertical message pointer rail on the left edge of the chat area, with clickable markers per user message for quick navigation and hover preview bubbles.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": ["slots"],
+      "platform": "web"
+    }
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "client-plugin",
+    "ui",
+    "message-pointer",
+    "navigation",
+    "chat"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kongdx/dsh-message-pointer"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

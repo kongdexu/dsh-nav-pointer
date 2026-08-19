@@ -1,0 +1,4 @@
+# dsh-message-pointer bundle patch layer — insert the plugin into the profile tree.
+- insert:
+    - id: dsh-message-pointer
+      name: dsh-message-pointer
