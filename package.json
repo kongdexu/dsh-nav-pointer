@@ -1,5 +1,5 @@
 {
-  "name": "dsh-message-pointer",
+  "name": "dsh-nav-pointer",
   "version": "0.1.0",
   "description": "DSH Web client plugin: vertical message pointer rail on the left edge of the chat area, with clickable markers per user message for quick navigation and hover preview bubbles.",
   "type": "module",
@@ -41,7 +41,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kongdx/dsh-message-pointer"
+    "url": "https://github.com/kongdexu/dsh-nav-pointer"
   },
   "publishConfig": {
     "access": "public"

@@ -1,4 +1,4 @@
-# dsh-message-pointer
+# dsh-nav-pointer
 
 > DSH (DeepSeek Harness) Web 客户端插件：在聊天界面左侧添加一条消息指针导轨，每条用户消息对应一个短横条标记，点击可快速跳转到对应消息位置，鼠标悬停显示消息预览气泡。
 >
@@ -17,21 +17,21 @@
 
 ### 通过 dshmarket（推荐）
 
-在 DSH 市场中搜索 `dsh-message-pointer` 并安装。
+在 DSH 市场中搜索 `dsh-nav-pointer` 并安装。
 
 ### 手动安装（本地 profile）
 
 ```bash
 cd ~/.dsh/profiles/web
-npm install dsh-message-pointer
+npm install dsh-nav-pointer
 # 或从 GitHub 直接安装：
-# npm install github:kongdx/dsh-message-pointer
+# npm install github:kongdexu/dsh-nav-pointer
 ```
 
 安装后编辑 `~/.dsh/profiles/web/package.json` 的 `dsh.profile.bundles` 数组，加入：
 
 ```json
-"dsh-message-pointer"
+"dsh-nav-pointer"
 ```
 
 重启 DSH Web 即可生效。
@@ -39,13 +39,13 @@ npm install dsh-message-pointer
 ### 开发模式（本地 link）
 
 ```bash
-git clone https://github.com/kongdx/dsh-message-pointer
-cd dsh-message-pointer
+git clone https://github.com/kongdexu/dsh-nav-pointer
+cd dsh-nav-pointer
 cd ~/.dsh/profiles/web
-npm link /path/to/dsh-message-pointer
+npm link /path/to/dsh-nav-pointer
 ```
 
-在 `dsh.profile.bundles` 加入 `"dsh-message-pointer"`，重启 DSH。
+在 `dsh.profile.bundles` 加入 `"dsh-nav-pointer"`，重启 DSH。
 
 ## 文件结构 Layout
 
