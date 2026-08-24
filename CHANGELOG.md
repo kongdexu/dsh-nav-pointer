@@ -2,10 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
-## [0.2.0] - 2026-08-19
+## [0.2.0] - 2026-08-24
 
 ### Added
 
+- Scrub navigation: press and drag along the pointer rail to scrub through the
+  conversation like a scrollbar. The pointer's Y position maps onto the
+  scrollport's `scrollTop`; a plain click (no drag, under a 3px threshold)
+  keeps the precise jump behaviour, and the drag suppresses the click jump to
+  avoid double-scrolling.
 - Keyboard shortcuts:
   - `Alt+↑` / `Alt+↓` → jump to previous/next user message
   - `Alt+Shift+↑` / `Alt+Shift+↓` → jump to first/last user message
@@ -26,16 +31,6 @@ All notable changes to this project are documented in this file.
   scroll position and no scroll actually occurred. Clicks and keyboard jumps now
   set the active marker immediately and briefly hold it through the scroll, so
   the marker color always updates.
-
-## [0.1.4] - 2026-08-19
-
-### Added
-
-- Scrub navigation: press and drag along the pointer rail to scrub through the
-  conversation like a scrollbar. The pointer's Y position maps onto the
-  scrollport's `scrollTop`; a plain click (no drag, under a 3px threshold)
-  keeps the previous precise smooth-scroll-to-message behaviour, and the drag
-  suppresses the click jump to avoid double-scrolling.
 
 ## [0.1.3] - 2026-08-19
 
