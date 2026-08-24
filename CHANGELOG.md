@@ -6,10 +6,6 @@ All notable changes to this project are documented in this file.
 
 ### Added
 
-- Message-type markers: code blocks (amber flat bar, detected via `pre/code`
-  descendants) and image messages (green dot, detected via `img` descendants)
-  get distinct shapes/colors on the rail. The active marker always resolves to
-  the DeepSeek blue, so type color is a non-active visual hint only.
 - Keyboard shortcuts:
   - `Alt+↑` / `Alt+↓` → jump to previous/next user message
   - `Alt+Shift+↑` / `Alt+Shift+↓` → jump to first/last user message

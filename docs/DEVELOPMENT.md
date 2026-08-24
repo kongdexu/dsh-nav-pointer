@@ -60,21 +60,6 @@ implementation drives `scrollTop` through `requestAnimationFrame` with an
   `wheel`/`touchstart` event cancels it, so programmatic scrolling never fights
   manual scrolling.
 
-## Message type detection
-
-`detectType(el)` walks the user row once per paint:
-- `pre, code` → `type: "code"` (amber flat bar, 6px tall, 1px radius)
-- `img` → `type: "image"` (green dot, 6px tall, 50% radius)
-- otherwise → `type: "text"` (default gray dash)
-
-Type class is applied as `type-<type>` on the marker's `<i>` parent via
-`.dsh-msg-marker.type-<type>`. Active markers override color via
-`.dsh-msg-marker.active > i` (higher specificity), so the type color
-disappears for the current-position marker to avoid competing with the
-position highlight. Colors use
-`var(--dsw-static-<color>-500, <hex-fallback>)` so the plugin renders
-correctly even if those token names aren't present in the host theme.
-
 ## Keyboard shortcuts
 
 A single `document`-level `keydown` listener (empty dependency array, never

@@ -78,8 +78,6 @@ assert(typeof reg?.[2] === 'function', 'slot component is a function');
 assert(injectedCss.includes('.dsh-msg-rail'), 'CSS includes the rail class');
 assert(injectedCss.includes('height:16px'), 'CSS marker height is 16px (v17 spec)');
 assert(injectedCss.includes('.dsh-msg-rail.scrubbing'), 'CSS includes scrub grabbing cursor state');
-assert(injectedCss.includes('.dsh-msg-marker.type-code'), 'CSS includes code marker variant');
-assert(injectedCss.includes('.dsh-msg-marker.type-image'), 'CSS includes image marker variant');
 
 console.log(failures === 0 ? 'SMOKE PASS' : `SMOKE FAIL (${failures})`);
 process.exit(failures === 0 ? 0 : 1);
