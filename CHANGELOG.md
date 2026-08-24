@@ -2,6 +2,45 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.2.0] - 2026-08-19
+
+### Added
+
+- Message-type markers: code blocks (amber flat bar, detected via `pre/code`
+  descendants) and image messages (green dot, detected via `img` descendants)
+  get distinct shapes/colors on the rail. The active marker always resolves to
+  the DeepSeek blue, so type color is a non-active visual hint only.
+- Keyboard shortcuts:
+  - `Alt+↑` / `Alt+↓` → jump to previous/next user message
+  - `Alt+Shift+↑` / `Alt+Shift+↓` → jump to first/last user message
+
+### Changed
+
+- Click and keyboard jumps use a fixed-duration (260 ms) eased scroll instead of
+  the browser's distance-based native smooth scroll, so long jumps no longer
+  feel slow. The duration is tunable at runtime via
+  `window.__DSH_NAV_POINTER_SCROLL_MS__`; mouse-wheel, touch, or rail-drag input
+  interrupts the animation so it never fights manual scrolling.
+
+### Fixed
+
+- Clicking a marker whose message was already fully in view (e.g. two user
+  messages fit on screen and the conversation cannot scroll) previously left the
+  highlighted marker unchanged, because the highlight was derived only from
+  scroll position and no scroll actually occurred. Clicks and keyboard jumps now
+  set the active marker immediately and briefly hold it through the scroll, so
+  the marker color always updates.
+
+## [0.1.4] - 2026-08-19
+
+### Added
+
+- Scrub navigation: press and drag along the pointer rail to scrub through the
+  conversation like a scrollbar. The pointer's Y position maps onto the
+  scrollport's `scrollTop`; a plain click (no drag, under a 3px threshold)
+  keeps the previous precise smooth-scroll-to-message behaviour, and the drag
+  suppresses the click jump to avoid double-scrolling.
+
 ## [0.1.3] - 2026-08-19
 
 ### Fixed
