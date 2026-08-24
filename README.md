@@ -21,10 +21,8 @@
 
 <div align="center">
   <img src="./screenshots/screenshot-20260824-172246.png" alt="使用 DSH 发布 v0.2.0 到插件商店的总结" width="640" />
-  <p>使用 DSH 发布 v0.2.0 到插件商店（npm）的流程总结</p>
 
   <img src="./screenshots/screenshot-20260824-172301.png" alt="发布后重新安装并测试新版本" width="640" />
-  <p>发布后重新安装并测试新版本</p>
 </div>
 
 ## 安装 Install
