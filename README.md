@@ -14,6 +14,7 @@
 - ⌨️ **键盘快捷键**：
   - `Alt+↑ / Alt+↓` 在用户消息间上下跳转
   - `Alt+Shift+↑ / Alt+Shift+↓` 跳到第一条/最后一条消息
+- ⚙️ **设置面板**：设置 → 消息指针 页面可调滚动时长、导轨/气泡/键盘开关、标记压缩，改动即时生效并持久化
 - 📐 **实时位置跟随**：侧栏开合、窗口缩放、滚动时导轨位置逐帧跟随
 - 🌓 **深浅模式自适应**：所有颜色使用 DSH 主题 token，自动适配深色/浅色主题
 
@@ -60,14 +61,21 @@ dsh plugin --profile web add link:/path/to/dsh-nav-pointer
 ## 文件结构 Layout
 
 ```
-lib/
-  index.js            # Host 端入口（client-only 插件，host 为空实现）
-  client.js           # Client 端入口，挂载 shell.overlay 槽位，渲染指针导轨
-  types/
-    index.d.ts        # Host 类型
-    client/index.d.ts # Client 类型
+src/
+  core.ts             # 纯逻辑：CSS/常量/几何压缩/高亮推导/预览裁剪/行收集（无 React，可单测）
+  config.ts           # 共享配置类型与默认值（host schema 与 client scope 共用）
+  client.ts           # Client 端入口，挂载 shell.overlay + settings.section 槽位
+  index.ts            # Host 端入口，注册 schemastery 设置命名空间（installSettingsSection）
+  types/…             # 声明文件，构建时拷入 lib/types
+lib/                  # esbuild 构建产物（client.js / index.js / types），发布与加载用
+build.mjs             # esbuild 构建（client→iife+模块加载包装，host→esm，设置包 external）
+tsconfig.json         # tsc 类型检查
+vitest.config.ts      # vitest（jsdom 行为测试）
+test/
+  *.test.ts           # vitest 行为测试
+  smoke.mjs           # 构建产物加载契约（无浏览器）
 cordis.patch.yml      # Cordis profile patch，把插件插入 bundle 树
-package.json          # 包元信息，含 dsh.bundle / dsh.client 字段
+package.json          # 包元信息，含 dsh.bundle / dsh.client / peerDependencies 字段
 ```
 
 ## 实现说明 Implementation
@@ -80,27 +88,35 @@ package.json          # 包元信息，含 dsh.bundle / dsh.client 字段
 
 ## 配置 Config
 
-点击 / 键盘跳转的滚动时长默认为 **260ms**（固定时长，长距离也不会变慢）。
-想要更快（或更慢），在浏览器控制台设置后**刷新页面**：
+所有偏好都在 **设置 → 消息指针** 页面实时调整并持久化：
 
-```js
-// 数字越小越快，建议 120~300
-window.__DSH_NAV_POINTER_SCROLL_MS__ = 160;
-```
+| 配置项 | 默认 | 说明 |
+| --- | --- | --- |
+| 滚动时长 | 260ms | 点击 / 键盘跳转动画时长（固定时长，范围和 60–2000ms） |
+| 显示指针导轨 | 开 | 关闭后不渲染消息指针导轨 |
+| 悬停预览气泡 | 开 | 鼠标悬停标记时的消息预览 |
+| 键盘跳转 | 开 | `Alt+↑/↓` 在用户消息间跳转 |
 
-滚轮滚动、手指触摸、拖拽导轨都会立即打断进行中的跳转动画。
+滚轮滚动、手指触摸、拖拽导轨都会立即打断进行中的跳转动画。当用户消息很多、自然高度超出可用视口时，标记之间的间距会自动压缩到刚好铺满视口（这是固定行为，不可关闭）。
+
+> 兼容旧用法：仍可通过 `window.__DSH_NAV_POINTER_SCROLL_MS__` 覆盖滚动时长
+> （优先级高于设置面板，需在插件加载前设置），但推荐改用设置面板。
 
 ## 验证 Verify
 
-无浏览器即可跑加载契约冒烟测试：
+一键跑完整校验（类型检查 → 构建 → 行为测试 → 加载契约）：
 
 ```bash
-npm test
+npm run check
 ```
 
-它会用 mock 的 `window.__ModuleLoader__` + React + `document` 加载
-`lib/client.js`，断言插件导出 `{ name, inject: ["slots"], apply }`、
-`apply()` 正确注册 `shell.overlay` 槽位，且注入的 CSS 符合当前规格。
+- `npm run typecheck`：`tsc --noEmit` 类型检查 `src/`
+- `npm run build`：esbuild 产出 `lib/`（client → iife + `window.__ModuleLoader__` 包装，host → esm）
+- `npm test`：vitest + jsdom，覆盖导轨压缩几何、高亮推导、预览裁剪、行收集与样式注入
+- `npm run test:smoke`：无浏览器加载构建产物 `lib/client.js`，用 mock 的
+  `window.__ModuleLoader__` + React + `document` + `settingsScope` 断言插件导出
+  `{ name, inject: ["slots", "settingsScope"], apply }`、`apply()` 正确注册
+  `shell.overlay` 与 `settings.section` 槽位，且注入的 CSS 符合当前规格
 
 ## 故障排查 Troubleshooting
 

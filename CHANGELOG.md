@@ -2,6 +2,36 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.3.0] - 2026-08-25
+
+### Added
+
+- Settings-panel integration: host now registers a `dsh-nav-pointer`
+  schemastery settings namespace (`installSettingsSection` + an exported
+  `Config` schema), and the client binds it through `ctx.settingsScope`
+  (`@deepseek-ai/dsh-client-ui-settings`) and registers a `settings.section`
+  page. Four live, DSH-persisted preferences: jump duration (`scrollMs`, 60–2000
+  ms), rail on/off, hover-bubble on/off, and Alt+arrow keyboard jumps. The
+  legacy `window.__DSH_NAV_POINTER_SCROLL_MS__` override still outranks
+  `scrollMs` for backwards compatibility. Rail marker compression stays a
+  fixed behaviour (no toggle): a long conversation always compresses gaps to
+  fill the viewport.
+
+### Changed
+
+- Rewrote the client/host sources in TypeScript under `src/`, splitting the
+  React-free core (CSS constants, clamp/truncate/ease-out curve, rail layout
+  compression, active-marker derivation, preview normalization, user-row
+  collection) into `src/core.ts` for unit-testability. Built output in `lib/` is
+  produced by esbuild (`build.mjs`): `lib/client.js` keeps the exact
+  `window.__ModuleLoader__.load` + `react`-external ABI, `lib/index.js` stays a
+  plain ESM host entry with `@deepseek-ai/dsh-settings`/`@deepseek-ai/schemastery`
+  kept external. Runtime behavior is unchanged.
+- Added vitest + jsdom behavior tests (`test/*.test.ts`) and kept
+  `test/smoke.mjs` as the built-artifact loading contract. `npm run check` now
+  runs typecheck → build → vitest → smoke; CI runs `npm ci && npm run check` and
+  fails if committed `lib/` drifts from `src/`.
+
 ## [0.2.0] - 2026-08-24
 
 ### Added

@@ -51,10 +51,24 @@ assert(!!plugin, 'factory returned a plugin object');
 assert(plugin && plugin.name === 'dsh-nav-pointer', 'plugin name is dsh-nav-pointer');
 assert(Array.isArray(plugin && plugin.inject), 'inject is an array');
 assert(plugin && plugin.inject.includes('slots'), 'inject declares the "slots" service');
+assert(plugin && plugin.inject.includes('settingsScope'), 'inject declares the "settingsScope" service');
 assert(typeof plugin?.apply === 'function', 'apply is a function');
 
 // Run apply() against a mock client ctx and observe slot registration.
 const registrations = [];
+const scopeMock = {
+  getSnapshot() {
+    return {
+      status: 'ready',
+      value: { scrollMs: 260, railEnabled: true, bubbleEnabled: true, keyboardEnabled: true },
+      writable: true,
+      mode: 'host',
+    };
+  },
+  subscribe() { return () => {}; },
+  set() { return Promise.resolve(); },
+  unset() { return Promise.resolve(); },
+};
 const ctx = {
   slots: {
     inject(name, cb) {
@@ -66,6 +80,7 @@ const ctx = {
       return () => {};
     },
   },
+  settingsScope: { bind: () => scopeMock },
   effect() {},
 };
 if (plugin) plugin.apply(ctx);
@@ -75,6 +90,11 @@ assert(!!reg, 'apply() registers a slot');
 assert(reg && reg[1].name === 'shell.overlay', 'slot name is shell.overlay');
 assert(reg && reg[1].id === 'message-pointer-rail', 'slot id is message-pointer-rail');
 assert(typeof reg?.[2] === 'function', 'slot component is a function');
+
+const sett = registrations.find(([k, o]) => k === 'register' && o && o.name === 'settings.section');
+assert(!!sett, 'apply() registers a settings.section when settingsScope is bound');
+assert(sett && sett[1].id === 'dsh-nav-pointer', 'settings section id is dsh-nav-pointer');
+assert(typeof sett?.[2] === 'function', 'settings section component is a function');
 assert(injectedCss.includes('.dsh-msg-rail'), 'CSS includes the rail class');
 assert(injectedCss.includes('height:16px'), 'CSS marker height is 16px (v17 spec)');
 assert(injectedCss.includes('.dsh-msg-rail.scrubbing'), 'CSS includes scrub grabbing cursor state');
