@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.3.1] - 2026-08-27
+
+### Fixed
+
+- On narrow layouts the pointer rail no longer overlaps message content. When the
+  chat column's left edge intrudes into the rail's fixed left zone, the rail
+  hides itself while `Alt+↑` / `Alt+↓` keyboard jumps keep working (user rows and
+  the active index are still tracked). Rail geometry and hover/click/scrub
+  behaviour at normal widths are unchanged.
+
 ## [0.3.0] - 2026-08-25
 
 ### Added
