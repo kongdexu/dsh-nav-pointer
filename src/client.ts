@@ -6,6 +6,8 @@ import {
   PLUGIN_ID,
   WINDOW_SCROLL_MS_OVERRIDE,
   MARKER_HEIGHT,
+  RAIL_WIDTH,
+  RAIL_LEFT_OFFSET,
   ACTIVE_LINE_RATIO,
   NAV_LOCK_MS,
   SCRUB_THRESHOLD_PX,
@@ -211,6 +213,7 @@ function MessagePointerRail(props: RailProps): React.ReactElement | null {
   const [rail, setRail] = React.useState<RailPos>({ left: 0, top: 0, height: 0, gap: 1 })
   const [bubbles, setBubbles] = React.useState<Record<number, BubblePos>>({})
   const [scrubbing, setScrubbing] = React.useState<boolean>(false)
+  const [railHidden, setRailHidden] = React.useState<boolean>(false)
 
   const scrollportRef = React.useRef<Element | null>(null)
   const userRowsRef = React.useRef<UserRow[]>([])
@@ -289,6 +292,7 @@ function MessagePointerRail(props: RailProps): React.ReactElement | null {
       activeIndexRef.current = -1
       navLockRef.current = null
       setBubbles({})
+      setRailHidden(false)
     }
 
     const findScrollport = (): Element | null => {
@@ -342,6 +346,14 @@ function MessagePointerRail(props: RailProps): React.ReactElement | null {
         ? Math.min(spRect.bottom, composer.getBoundingClientRect().top)
         : spRect.bottom
       const viewportHeight = Math.max(0, viewportBottom - spRect.top)
+
+      // 窄屏检测：内容列左边缘一旦侵入 rail 所在区域，就视觉隐藏 rail；
+      // 但 userRows / activeIndex 仍在下方照常维护，Alt+↑/↓ 键盘跳转不受影响。
+      const flowColumn = sp.querySelector('[data-chat-flow]')
+      const flowLeft = flowColumn ? flowColumn.getBoundingClientRect().left : null
+      const overlapsRail =
+        flowLeft != null && flowLeft < spRect.left + RAIL_LEFT_OFFSET + RAIL_WIDTH
+      setRailHidden(overlapsRail)
 
       const layout = computeRailLayout({
         count: rows.length,
@@ -522,8 +534,7 @@ function MessagePointerRail(props: RailProps): React.ReactElement | null {
 
   // ── Render ────────────────────────────────────────────────────────────
 
-  if (!config.railEnabled) return null
-  if (markers.length === 0) return null
+  if (!config.railEnabled || railHidden || markers.length === 0) return null
 
   return React.createElement(
     'div',

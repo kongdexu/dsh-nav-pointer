@@ -13,6 +13,8 @@ export const WINDOW_SCROLL_MS_OVERRIDE: number | undefined =
     : undefined
 
 export const MARKER_HEIGHT = 16
+export const RAIL_WIDTH = 36
+export const RAIL_LEFT_OFFSET = 16
 export const MARKER_GAP_DEFAULT = 1
 export const ACTIVE_LINE_RATIO = 0.35
 export const NAV_LOCK_MS = 600
@@ -36,7 +38,7 @@ export interface RailLayoutResult {
 // ── CSS ──────────────────────────────────────────────────────────────────
 
 export const CSS = [
-  '.dsh-msg-rail{position:fixed;width:36px;z-index:100;pointer-events:none;display:flex;flex-direction:column;align-items:flex-start}',
+  `.dsh-msg-rail{position:fixed;width:${RAIL_WIDTH}px;z-index:100;pointer-events:none;display:flex;flex-direction:column;align-items:flex-start}`,
   '.dsh-msg-marker{pointer-events:auto;width:36px;height:16px;cursor:pointer;display:flex;align-items:center;flex:none;border-radius:4px;position:relative}',
   '.dsh-msg-marker > i{display:block;height:4px;border-radius:2px;background:var(--dsw-alias-label-tertiary);width:24px;transition:width .15s ease,background .15s ease}',
   '.dsh-msg-marker:hover > i{background:var(--dsw-alias-label-secondary);width:32px}',
@@ -133,7 +135,7 @@ export function computeRailLayout(opts: {
     0,
     Math.max(0, opts.viewportHeight - railHeight),
   )
-  return { gap, railHeight, topOffset, leftOffset: 16 }
+  return { gap, railHeight, topOffset, leftOffset: RAIL_LEFT_OFFSET }
 }
 
 /**
