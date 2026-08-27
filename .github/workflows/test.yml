@@ -6,11 +6,14 @@ on:
   pull_request:
 
 jobs:
-  smoke:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm test
+      - run: npm ci
+      - run: npm run check
+      - name: Ensure committed lib/ matches src/
+        run: git diff --exit-code -- lib || (echo "::error::lib/ is out of date. Run \`npm run build\` and commit the result." && exit 1)
