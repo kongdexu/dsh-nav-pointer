@@ -2,6 +2,32 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.4.0] - 2026-08-31
+
+### Changed
+
+- **dsh 0.1.2-alpha.2 ABI adaptation** (required for the plugin to load at all
+  on current dsh): the host half no longer imports the removed
+  `installSettingsSection` / `settingsNamespace` exports from
+  `@deepseek-ai/dsh-settings`. It now registers the `dsh-nav-pointer` settings
+  namespace through an optional `ctx.inject(['settings'], …)` consumer block
+  calling `ctx.settings.installSection()` — same semantics (composition entry
+  layered as `base`, fallback when no settings provider is mounted).
+- `dsh.client.inject` now declares `@deepseek-ai/dsh-client-ui-renderer`
+  (provides `ctx.slots`) and `@deepseek-ai/dsh-client-ui-settings` (provides
+  `ctx.settingsScope`) instead of the retired `@deepseek-ai/dsh-client-runtime`
+  package and the build-time-only `@deepseek-ai/dsh-client-ui-slots`.
+- Peer/dev dependencies moved to the 0.1.2-alpha.2 line:
+  `@deepseek-ai/dsh-settings ^0.1.2-alpha.2`, `@deepseek-ai/schemastery ^3.18.2`,
+  `@deepseek-ai/cordis ^4.0.2`.
+
+### Notes
+
+- Runtime client contract verified unchanged in 0.1.2-alpha.2: `ctx.slots`
+  (`inject`/`register`, `shell.overlay` + `settings.section` list slots),
+  `ctx.settingsScope.bind()`, and `ctx.effect()` all still exist with
+  compatible signatures, so `src/client.ts` required no code changes.
+
 ## [0.3.1] - 2026-08-27
 
 ### Fixed

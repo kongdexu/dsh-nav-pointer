@@ -24,10 +24,12 @@ schema-backed controls and routes edits through `scope.set(field, value)`.
 
 ## Settings
 
-The host registers a schemastery namespace through `installSettingsSection`
-(`src/index.ts`, exported `Config` schema, composition entry config as the
-`base` layer). The client injects `settingsScope` (provided by
-`@deepseek-ai/dsh-client-ui-settings`) and binds it once in `apply`:
+The host registers a schemastery namespace through
+`ctx.settings.installSection` via an optional `ctx.inject(['settings'], …)`
+consumer block (`src/index.ts`, exported `Config` schema, composition entry
+config as the `base`/fallback layer). The client injects `settingsScope`
+(provided by `@deepseek-ai/dsh-client-ui-settings`) and binds it once in
+`apply`:
 
 ```ts
 const scope = ctx.settingsScope?.bind<NavPointerConfig>({ namespace: SETTINGS_NAMESPACE })

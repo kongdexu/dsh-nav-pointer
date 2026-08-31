@@ -1,9 +1,13 @@
 // dsh-nav-pointer — host half.
 // Registers a schemastery settings namespace so the browser half can bind its
 // preferences through ctx.settingsScope, with the composition entry config as the base layer.
+// The settings service is optional: `ctx.inject(['settings'])` falls back to the
+// composition entry when no provider is mounted (dsh-settings >= 0.1.2-alpha.2 ABI).
 import type { Context } from '@deepseek-ai/cordis'
+// Type-only import — pulls the `Context.settings` service augmentation from
+// @deepseek-ai/dsh-settings so the `ctx.inject(['settings'])` callback is typed.
+import type {} from '@deepseek-ai/dsh-settings'
 import z from '@deepseek-ai/schemastery'
-import { installSettingsSection, settingsNamespace } from '@deepseek-ai/dsh-settings'
 import { SETTINGS_NAMESPACE, DEFAULT_CONFIG, type NavPointerConfig } from './config'
 
 export const name = 'dsh-nav-pointer'
@@ -17,12 +21,12 @@ export const Config = z.object({
   keyboardEnabled: z.boolean().default(DEFAULT_CONFIG.keyboardEnabled),
 })
 
-const NS = settingsNamespace(SETTINGS_NAMESPACE)
-
 export function apply(ctx: Context, config?: Partial<NavPointerConfig>): void {
   const entry: NavPointerConfig = { ...DEFAULT_CONFIG, ...(config ?? {}) }
-  installSettingsSection(ctx, NS, Config, entry, {
-    setSource: () => {},
-    onChange: () => {},
+  ctx.inject(['settings'], (settingsCtx) => {
+    settingsCtx.settings.installSection(ctx, SETTINGS_NAMESPACE, Config, entry, {
+      setSource: () => {},
+      onChange: () => {},
+    })
   })
 }

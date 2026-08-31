@@ -65,7 +65,7 @@ src/
   core.ts             # 纯逻辑：CSS/常量/几何压缩/高亮推导/预览裁剪/行收集（无 React，可单测）
   config.ts           # 共享配置类型与默认值（host schema 与 client scope 共用）
   client.ts           # Client 端入口，挂载 shell.overlay + settings.section 槽位
-  index.ts            # Host 端入口，注册 schemastery 设置命名空间（installSettingsSection）
+  index.ts            # Host 端入口，注册 schemastery 设置命名空间（ctx.settings.installSection）
   types/…             # 声明文件，构建时拷入 lib/types
 lib/                  # esbuild 构建产物（client.js / index.js / types），发布与加载用
 build.mjs             # esbuild 构建（client→iife+模块加载包装，host→esm，设置包 external）
